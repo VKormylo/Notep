@@ -410,3 +410,5 @@ const init = function () {
   // Sort elements by sorting value from local storage
   if (state.notes || state.folders) sortElements(sorting);
 };
+
+setDefaultURL();
