@@ -1,0 +1,197 @@
+@import "_variables.css";
+
+/* ------------------------------------------- */
+/* ---------------- NOTE-CARD ---------------- */
+/* ------------------------------------------- */
+
+.note-card__edit {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  opacity: 0;
+  transition: all .2s;
+}
+
+.note-card:hover .note-card__edit {
+  opacity: 1;
+}
+
+/* -------------------------------------- */
+/* ---------------- NOTE ---------------- */
+/* -------------------------------------- */
+
+.note {
+  position: relative;
+  height: 100%;
+}
+
+.note-change {
+  right: 20%;
+}
+
+.note-date {
+  margin-left: 72px;
+}
+
+.add-to-folder {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  right: -32px;
+  transform: translateX(150px);
+  top: 0;
+  transition: all 0.4s;
+}
+
+.add-to-folder.visible {
+  transform: translateX(0);
+}
+
+.add-to-folder.visible .folder-results {
+  display: flex;
+}
+
+.show-folders {
+  display: flex;
+  align-items: center;
+}
+
+.add-to-folder.visible .show-folders__btn svg {
+  transform: scale(-1, 1);
+}
+
+.add-to-folder.visible .show-folders__btn svg path {
+  fill: var(--red);
+}
+
+.show-folders__input {
+  width: 150px;
+  height: 45px;
+  border-left: 2px solid var(--secondary-blue);
+  padding-left: 12px;
+  font-size: var(--btn-fz);
+  color: var(--primary-blue);
+}
+
+.show-folders__input::placeholder {
+  color: var(--primary-blue);
+}
+
+.folder-results {
+  display: none;
+  flex-direction: column;
+  margin-top: 12px;
+  gap: 4px;
+  min-width: 220px;
+  max-height: 548px;
+}
+
+.folder-results.scroll {
+  overflow-y: scroll;
+}
+
+.folder-results::-webkit-scrollbar {
+  width: 12px;
+}
+
+.folder-results::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.folder-results::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: var(--tertiary-blue);
+  border: 2px solid var(--secondary-blue);
+}
+
+.folder-results::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-blue);
+}
+
+.folder-result {
+  display: flex;
+  align-items: center;
+  padding: 14px 12px;
+  background: linear-gradient(95.14deg, var(--folder-gradient));
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.folder-result .folder-circle {
+  height: 20px;
+  width: 20px;
+  border: 1px solid var(--secondary-blue);
+  cursor: default;
+}
+
+.folder-result__info {
+  margin-left: 12px;
+}
+
+.folder-result__title {
+  font-size: var(--title-fz);
+  color: var(--white);
+}
+
+.folder-result__date {
+  font-size: var(--date-fz);
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.folder-result__btn {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  opacity: 0;
+  transition: all 0.2s;
+  pointer-events: none;
+  padding: 7px;
+  border-radius: 4px;
+  background-color: var(--dark-blue);
+}
+
+.folder-result__btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.folder-result:hover .folder-result__btn {
+  display: flex;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.note-delete__btn {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.note-remove__btn {
+  display: flex;
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  opacity: 0;
+  transition: all 0.2s;
+  pointer-events: none;
+}
+
+.note-card:hover .note-remove__btn {
+  display: flex;
+  align-items: center;
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.note-remove__btn svg rect {
+  transition: all 0.3s;
+}
+
+.note-remove__btn:hover svg:first-child {
+  fill: var(--dark-blue);
+}

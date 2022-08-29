@@ -1,0 +1,35 @@
+@import "_variables.css";
+
+.navbar {
+  grid-area: navbar;
+  padding: 48px;
+  font-size: var(--link-fz);
+}
+
+.navbar-li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  cursor: pointer;
+}
+
+.navbar-link {
+  margin-left: 8px;
+  transition: all 0.2s;
+}
+
+.navbar-li:hover a {
+  color: var(--primary-blue);
+}
+
+.navbar-li:hover svg path {
+    fill: var(--primary-blue);
+}
+
+.navbar-li.active .navbar-link{
+  color: var(--primary-blue);
+}
+
+.navbar-li.active svg path {
+  fill: var(--primary-blue);
+}

@@ -1,0 +1,44 @@
+@import "_variables.css";
+
+.main {
+  position: relative;
+  grid-area: main;
+  height: 100%;
+  background-color: var(--secondary-blue);
+  padding: 32px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+}
+
+.overlay {
+  display: block;
+  position: absolute;
+  z-index: 100;
+  background-color: var(--tertiary-blue-50);
+  height: 100%;
+  width: 100%;
+  backdrop-filter: blur(10px);
+}
+
+.overlay.hidden {
+  display: none;
+}
+
+.notes.all,
+.folders.all {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  column-gap: 32px;
+  row-gap: 32px;
+  order: -1;
+}
+
+.welcome {
+  margin-top: 100px;
+  text-align: center;
+  font-weight: 500;
+  color: var(--primary-blue);
+  font-size: var(--title-fz-md);
+}

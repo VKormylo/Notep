@@ -1,0 +1,139 @@
+@import "_variables.css";
+@import "_components.css";
+
+/* --------------------------------------------- */
+/* ---------------- MAIN HEADER ---------------- */
+/* --------------------------------------------- */
+
+svg path {
+  transition: all 0.3s;
+}
+
+.header {
+  grid-area: header;
+  display: flex;
+  justify-content: space-between;
+  padding: 18px 24px;
+}
+
+.header-profile {
+  display: flex;
+  align-items: center;
+}
+
+.header-profile {
+  color: var(--primary-blue);
+  font-size: var(--link-fz);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.header-profile svg {
+  margin-left: 12px;
+}
+
+.header-profile:hover {
+  color: var(--tertiary-blue);
+}
+
+.header-profile:hover svg path {
+  fill: var(--tertiary-blue);
+}
+
+/* ------------------------------------------- */
+/* ---------------- SUBHEADER ---------------- */
+/* ------------------------------------------- */
+
+.subheader {
+  grid-area: subheader;
+  background-color: var(--secondary-blue-70);
+  display: flex;
+  /* justify-content: space-between; */
+  align-items: center;
+  padding: 0 32px;
+  transition: all .3s;
+}
+
+.sorting {
+  display: flex;
+  align-items: center;
+}
+
+.sorting-text {
+  font-size: var(--link-fz);
+  margin-right: 8px;
+}
+
+.sorting-select {
+  background-color: var(--primary-blue);
+  color: var(--white);
+  padding: 6px 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  outline: none;
+}
+
+.btns-create {
+  display: flex;
+  align-items: center;
+  margin-left: 64px;
+}
+
+.add-note {
+  background: linear-gradient(101.89deg, var(--main-gradient));
+}
+
+.add-note::before {
+  background: linear-gradient(-101.89deg, var(--main-gradient));
+}
+
+.add-folder {
+  background: linear-gradient(101.89deg, var(--btn-folder-gradient));
+}
+
+.add-folder::before {
+  background: linear-gradient(-101.89deg, var(--btn-folder-gradient));
+}
+
+.subheader.note-page .add-folder{
+  display: none;
+}
+
+.subheader.folder-page .add-note{
+  display: none;
+}
+
+.search {
+  position: relative;
+  display: flex;
+  margin-left: auto;
+}
+
+.search-input {
+  height: 40px;
+  width: 240px;
+  background-color: var(--secondary-blue);
+  color: var(--tertiary-blue);
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  padding: 0 32px 0 18px;
+  font-weight: 500;
+}
+
+.search-input::placeholder {
+  color: var(--tertiary-blue);
+}
+
+.btn-search {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(115.89deg, var(--main-gradient));
+  border-radius: 10px;
+}

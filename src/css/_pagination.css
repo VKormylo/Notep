@@ -1,0 +1,35 @@
+@import "_variables.css";
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-column: span 3;
+    grid-row: -1;
+    order: 100;
+    margin-top: 32px;
+}
+
+.prev-page,
+.next-page {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.numbers-page {
+    display: flex;
+    margin: 0 16px;
+    font-size: var(--link-fz);
+    font-weight: 500;
+}
+
+.page-number {
+    margin: 0 4px;
+    cursor: pointer;
+}
+
+.page-number.active {
+    color: var(--primary-blue);
+    transform: scale(1.2);
+}

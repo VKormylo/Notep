@@ -1,0 +1,153 @@
+@import "_variables.css";
+
+.folder {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+}
+
+.folder-create__bottom {
+  display: flex;
+  justify-content: space-between;
+}
+
+.folder-circles {
+  display: flex;
+}
+
+.folder-circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.folder-circle.active {
+  border: double 2px transparent;
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+}
+
+.folder-circle + .folder-circle {
+  margin-left: 12px;
+}
+
+.circle--dark {
+  background-color: var(--dark-blue);
+  background-image: linear-gradient(var(--dark-blue), var(--dark-blue)),
+    radial-gradient(circle at top left, var(--white), var(--primary-blue));
+}
+
+.circle--tertiary {
+  background-color: var(--tertiary-blue);
+  background-image: linear-gradient(var(--tertiary-blue), var(--tertiary-blue)),
+    radial-gradient(circle at top left, var(--white), var(--primary-blue));
+}
+
+.circle--primary {
+  background-color: var(--primary-blue);
+  background-image: linear-gradient(var(--primary-blue), var(--primary-blue)),
+    radial-gradient(circle at top left, var(--white), var(--primary-blue));
+}
+
+.circle--ocean {
+  background-color: var(--ocean-30);
+  background-image: linear-gradient(var(--ocean-30), var(--ocean-30)),
+    radial-gradient(circle at top left, var(--white), var(--primary-blue));
+}
+
+.circle--violet {
+  background-color: var(--primary-violet-60);
+  background-image: linear-gradient(
+      var(--primary-violet-60),
+      var(--primary-violet-60)
+    ),
+    radial-gradient(circle at top left, var(--white), var(--primary-blue));
+}
+
+.folder-card .folder-circle {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+}
+
+.folder-card__info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.folder-date {
+  margin: 0 24px 0 32px;
+}
+
+.folder-change {
+  right: 5%;
+}
+
+.folder-notes__count {
+  font-size: var(--btn-fz);
+  color: var(--tertiary-blue);
+  margin-top: 4px;
+}
+
+.folder-add__note {
+  margin-left: auto;
+  margin-right: -32px;
+}
+
+.folder-add__note.disabled {
+  pointer-events: none;
+}
+
+.folder-add__note.disabled svg path {
+  fill: var(--red);
+}
+
+.folder-notes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 16px;
+  row-gap: 18px;
+  margin-top: 24px;
+}
+
+.folder-note {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+  width: 300px;
+  height: 160px;
+  border-radius: 10px;
+  padding: 24px 24px 0 24px;
+  color: var(--white);
+  background-color: var(--primary-blue);
+}
+
+.folder-note .element-create__text {
+  width: 100%;
+  padding: 6px;
+  margin: 12px 0;
+  height: 60px;
+}
+
+.folder-note .element-create__title,
+.folder-note .element-create__text {
+  font-size: 14px;
+}
+
+.folder-note .btns-add {
+  font-size: 16px;
+}
+
+.folder-note .btns-add .btns-add__create:hover {
+  background-color: var(--tertiary-blue);
+}
+
+.folder-btns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}

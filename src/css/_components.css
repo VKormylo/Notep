@@ -1,0 +1,376 @@
+@import "_variables.css";
+
+.main-message {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 20%;
+  text-align: center;
+  font-size: var(--title-fz-lg);
+  color: var(--primary-blue);
+  font-weight: 500;
+}
+
+.message {
+  color: var(--tertiary-blue);
+  font-size: var(--link-fz);
+  display: flex;
+  margin: 0 auto;
+  padding: 12px 0;
+  font-weight: 500;
+}
+
+/* ----------------------------------------- */
+/* ---------------- BUTTONS ---------------- */
+/* ----------------------------------------- */
+
+.btn--create {
+  position: relative;
+  padding: 9px 18px;
+  border-radius: 10px;
+  font-size: var(--btn-fz);
+  font-weight: 500;
+  color: var(--white);
+  transition: all 0.3s;
+  background-size: 1px 200px;
+  z-index: 1;
+}
+
+.btn--create::before {
+  position: absolute;
+  content: "";
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  transition: opacity 0.3s linear;
+  opacity: 0;
+  border-radius: 10px;
+}
+
+.btn--create:hover::before {
+  opacity: 1;
+}
+
+.btn--delete {
+  padding: 4px 6px;
+  border-radius: 4px;
+  background-color: var(--red);
+  color: var(--white);
+  transition: all 0.3s;
+}
+
+.btn--square {
+  padding: 13px 11px;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  background-color: var(--white);
+}
+
+.btn--square svg path {
+  fill: var(--primary-blue);
+}
+
+.add-note.disabled,
+.add-folder.disabled {
+  background: linear-gradient(101.89deg, var(--note-hover-gradient));
+  pointer-events: none;
+}
+
+.prev-page.disabled,
+.next-page.disabled {
+  pointer-events: none;
+}
+
+.prev-page.disabled svg path,
+.next-page.disabled svg path {
+  fill: var(--tertiary-blue);
+}
+
+.btn--simple {
+  padding: 4px 8px;
+  background-color: var(--white);
+  color: var(--primary-blue);
+  border-radius: 4px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.btn--simple:hover {
+  background-color: var(--primary-blue);
+  color: var(--white);
+}
+
+.btn--simple.btn--reverse {
+  background-color: var(--primary-blue);
+  color: var(--white);
+}
+.btn--simple.btn--reverse:hover {
+  background-color: var(--white);
+  color: var(--primary-blue);
+}
+
+/* ------------------------------------------------------- */
+/* ---------------- NOTE AND FOLDER ITEMS ---------------- */
+/* ------------------------------------------------------- */
+
+/* ITEMS AND CARDS */
+
+.note-item,
+.folder-item {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+  width: 290px;
+  height: 190px;
+  border-radius: 10px;
+  padding: 32px 32px 0 32px;
+  color: var(--white);
+}
+
+.note-item {
+  border: 2px solid var(--white-70);
+  background: linear-gradient(139.66deg, var(--note-gradient));
+}
+
+.folder-item {
+  border: 2px solid var(--white-30);
+  background: linear-gradient(139.66deg, var(--folder-gradient));
+}
+
+.element-create {
+  position: absolute;
+  z-index: 101;
+  display: none;
+  order: -2;
+  top: 40%;
+  left: 50%;
+  width: 500px;
+  height: 300px;
+  padding: 48px 48px 0 48px;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.element-create.visible {
+  display: flex;
+}
+
+.element-create__title {
+  font-size: var(--main-fz);
+  color: var(--secondary-blue);
+  background: none;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid var(--secondary-blue);
+  padding: 0 0 2px 4px;
+}
+
+.element-create__title::placeholder,
+.element-create__text::placeholder {
+  color: var(--secondary-blue);
+}
+
+.element-create__text {
+  color: var(--secondary-blue);
+  font-size: var(--main-fz);
+  padding: 6px 0 0 6px;
+  margin: 24px 0;
+  width: 400px;
+  height: 120px;
+  background: linear-gradient(130.53deg, var(--note-textbox-gradient));
+  border-radius: 4px;
+  resize: none;
+  outline: none;
+  border: none;
+}
+
+.element-create__title.wrong-data,
+.element-create__text.wrong-data {
+  border-color: var(--red);
+}
+
+.element-create__title.wrong-data::placeholder {
+  color: var(--red);
+}
+
+.note-card,
+.folder-card {
+  position: relative;
+  cursor: pointer;
+  word-wrap: break-word;
+  overflow: hidden;
+}
+
+.card-title {
+  font-size: var(--title-fz-md);
+  max-height: 50px;
+}
+
+.card-text {
+  color: var(--white-70);
+  margin-top: 12px;
+}
+
+.card-title,
+.card-text {
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+}
+
+.card-date {
+  align-self: flex-end;
+  margin-top: auto;
+  margin-bottom: 24px;
+}
+
+/* BUTTONS */
+
+.btns-add {
+  align-self: flex-end;
+  font-size: var(--link-fz);
+}
+
+.btns-add__cancel {
+  margin-right: 12px;
+  transition: all 0.3s;
+  color: var(--dark-blue);
+}
+
+.btns-add__cancel:hover {
+  color: var(--white);
+}
+
+.btns-add__create {
+  margin-bottom: 12px;
+}
+
+/* ------------------------------------------------------- */
+/* ---------------- NOTE AND FOLDER PAGES ---------------- */
+/* ------------------------------------------------------- */
+
+.element-page__top {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+}
+
+.element-date {
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: var(--date-fz);
+  background-color: var(--white);
+  color: var(--primary-blue);
+  padding: 6px 8px;
+}
+
+.current-element__title {
+  margin: 32px 0 14px 0;
+  font-weight: 500;
+  font-size: var(--title-fz-lg);
+  color: var(--primary-blue);
+  outline: none;
+  width: 800px;
+  min-height: 10px;
+  overflow: auto;
+}
+
+.current-element__text {
+  outline: none;
+  width: 800px;
+  min-height: 10px;
+  overflow: auto;
+}
+
+.current-element__change {
+  display: none;
+  position: absolute;
+}
+
+.current-element__change.edited {
+  display: block;
+}
+
+.btn-back {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.link-back {
+  margin-left: 8px;
+  color: var(--primary-blue);
+  font-size: var(--link-fz);
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-back:hover .link-back {
+  color: var(--tertiary-blue);
+}
+
+.btn-back:hover svg {
+  transform: translateX(-6px);
+}
+
+.btn-back:hover svg path {
+  fill: var(--tertiary-blue);
+}
+
+.note-delete__btn,
+.folder-delete__btn {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.note-delete__btn:hover,
+.folder-delete__btn:hover {
+  transform: translateY(-4px);
+}
+
+.deleting-window {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  height: 180px;
+  padding: 16px 24px;
+  border-radius: 10px;
+  background-color: var(--white);
+}
+
+.deleting-name {
+  font-size: var(--fz-sm);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--primary-blue);
+}
+
+.deleting-title {
+  color: var(--tertiary-blue);
+  font-weight: 500;
+  margin: 12px 0;
+}
+
+.deleting-btns {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  margin-top: auto;
+  gap: 24px;
+  font-weight: 500;
+}
+
+.deleting-confirm {
+  padding: 2px 12px;
+}

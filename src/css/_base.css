@@ -1,0 +1,75 @@
+@import "_variables.css";
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  background: linear-gradient(107.56deg, var(--main-gradient));
+  color: var(--dark-blue);
+  font-size: var(--main-fz);
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+}
+
+.container {
+  max-width: 1200px;
+  min-height: 900px;
+  margin: 5vh auto;
+  background-color: var(--white);
+  border-radius: 10px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 0.2fr 1fr;
+  grid-template-rows: 80px 74px 1fr;
+  grid-template-areas: "header header" "navbar subheader" "navbar main";
+}
+
+.container.hidden {
+  display: none;
+}
+
+.container.subheader-hidden .subheader {
+  display: none;
+}
+
+.container.subheader-hidden .main {
+  grid-row: span 2;
+}
+
+.container.subheader-hidden .pagination {
+  display: none;
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+  color: var(--dark-blue);
+}
+
+svg,
+svg path {
+  transition: all 0.2s;
+}
+
+input {
+  outline: none;
+  border: none;
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+}
+
+textarea {
+  font-family: "Roboto", sans-serif;
+}

@@ -1,0 +1,132 @@
+.authentication {
+  display: none;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.authentication.visible {
+  display: flex;
+}
+
+.auth-inner {
+  display: flex;
+  height: 580px;
+  width: 800px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.auth-item {
+  width: 50%;
+}
+
+.auth-info {
+  text-align: right;
+  background: linear-gradient(
+    117.09deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  backdrop-filter: blur(10px);
+  padding: 24px 24px 0 0;
+  border-radius: 10px 0px 0px 10px;
+  border: 2px solid var(--white-30);
+  border-right: none;
+}
+
+.auth-info__text {
+  display: inline-block;
+  margin-top: 32px;
+  width: 330px;
+  color: var(--secondary-blue);
+  font-size: var(--title-fz-lg);
+  font-family: "Courgette", cursive;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  padding: 24px 48px;
+  background-color: var(--secondary-blue);
+}
+
+.auth-form__title {
+  font-size: var(--title-fz-lg);
+  font-weight: 500;
+  color: var(--primary-blue);
+}
+
+.auth-form__subtitle {
+  font-weight: 500;
+  color: var(--tertiary-blue);
+  margin: 18px 0 12px 0;
+}
+
+.auth-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-form__item {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-form__item + .auth-form__item {
+  margin-top: 24px;
+}
+
+.auth-form__input {
+  color: var(--tertiary-blue);
+  background: none;
+  border-bottom: 2px solid var(--tertiary-blue);
+  font-size: var(--btn-fz);
+  margin-top: 10px;
+  padding: 0 0 4px 6px;
+  font-weight: 500;
+}
+
+.auth-form__input::placeholder {
+  color: var(--tertiary-blue);
+}
+
+.auth-form__input.wrong-data {
+  border-color: var(--red);
+}
+
+.auth-form__input.wrong-data::placeholder {
+  color: var(--red);
+}
+
+.auth-form__btn {
+  position: relative;
+  margin-top: 32px;
+  margin-left: auto;
+  color: var(--white);
+  font-weight: 500;
+  background-color: var(--primary-blue);
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: all 0.3s;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.auth-form__btn::before {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  transform: translateX(-100%);
+  width: 50%;
+  height: 100%;
+  background-color: var(--tertiary-blue);
+  z-index: -1;
+  transition: all 0.3s;
+}
+
+.auth-form__btn:hover::before {
+  transform: translateX(0);
+}
