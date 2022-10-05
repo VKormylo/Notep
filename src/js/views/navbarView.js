@@ -2,8 +2,10 @@ import { getURL } from "../helpers";
 
 class NavbarView {
   _parentElement = document.querySelector(".navbar");
+  _headerProfile = document.querySelector(".header-profile");
   _subheader = document.querySelector(".subheader");
   _links = document.querySelectorAll(".navbar-li");
+  _container = document.querySelector(".container");
 
   _addNote = this._subheader.querySelector(".add-note");
   _addFolder = this._subheader.querySelector(".add-folder");
@@ -41,6 +43,10 @@ class NavbarView {
     // Change pages on url change
     window.addEventListener("hashchange", function () {
       const url = getURL();
+      if (url !== "account") {
+        that._container.className = "container";
+        document.querySelector(".settings").innerHTML = "";
+      }
       if (url !== "notes" && url !== "folders") return;
       // Remove active link class
       that._links.forEach((link) => (link.className = "navbar-li"));
@@ -51,6 +57,18 @@ class NavbarView {
       link.classList.add("active");
       handler(url);
       that._updateSubheader();
+    });
+  }
+
+  addHandlerOpenSettings(handler) {
+    const that = this;
+    this._headerProfile.addEventListener("click", function () {
+      const url = "account";
+      that._links.forEach((link) => (link.className = "navbar-li"));
+      location.hash = url;
+      that._container.classList.add("subheader-hidden");
+      that._container.classList.add("account");
+      handler(url);
     });
   }
 

@@ -47,6 +47,11 @@ body {
   display: none;
 }
 
+.container.account .notes, 
+.container.account .folders {
+  display: none;
+}
+
 ul,
 li {
   list-style: none;

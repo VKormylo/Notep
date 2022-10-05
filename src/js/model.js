@@ -1,3 +1,10 @@
+import {
+  TITLE_COLOR,
+  TITLE_FONT_SIZE,
+  TEXT_COLOR,
+  TEXT_FONT_SIZE,
+  DEFAULT_FONT_FAMILY,
+} from "./config.js";
 import { getURL, setDefaultURL } from "./helpers.js";
 
 export const state = {
@@ -15,6 +22,10 @@ export const state = {
     page: 1,
     resultsPerPage: 9,
     type: "",
+  },
+  account: {
+    login: undefined,
+    password: undefined,
   },
 };
 
@@ -41,6 +52,18 @@ export const createNote = function (newNote, getNote = false) {
     noteText: newNote.noteText,
     noteDate: newNote.noteDate,
     noteID: state.notes.length ? state.notes.at(-1).noteID + 1 : 1,
+    noteStyle: {
+      title: {
+        color: TITLE_COLOR,
+        fontSize: TITLE_FONT_SIZE,
+        fontFamily: DEFAULT_FONT_FAMILY,
+      },
+      text: {
+        color: TEXT_COLOR,
+        fontSize: TEXT_FONT_SIZE,
+        fontFamily: DEFAULT_FONT_FAMILY,
+      },
+    },
   };
   state.notes.push(note);
 
@@ -73,11 +96,17 @@ export const createNote = function (newNote, getNote = false) {
   return note;
 };
 
+export const editNote = function (noteID, editedNote) {
+  const note = state.notes.find((note) => note.noteID === noteID);
+  // Make deep copy of edited note (style)
+  note.noteStyle = JSON.parse(JSON.stringify(editedNote));
+  setNotesLS();
+};
+
 export const addNoteToFolder = function (noteID, folderID) {
   // Selecting folder and note by id
   const folder = state.folders.find((folder) => folder.folderID === folderID);
   const note = state.notes.find((note) => note.noteID === noteID);
-
   // if number of notes in folder < 9 then add it else render message
   if (folder.notes.length < 9) {
     folder.notes.unshift(note);
@@ -91,7 +120,9 @@ export const addNoteToFolder = function (noteID, folderID) {
 
 export const deleteNote = function (noteID) {
   const note = state.notes.filter((note) => note.noteID !== noteID);
+  // Remove deleted note
   state.notes = note;
+  // Remove note from folder
   const folderNote = state.folders.filter((folder) =>
     folder.notes.find((note) => note.noteID === noteID)
   );
@@ -117,6 +148,18 @@ export const createFolder = function (newFolder) {
     folderDate: newFolder.folderDate,
     folderID: state.folders.length ? state.folders.at(-1).folderID + 1 : 1,
     folderColor: newFolder.folderColor,
+    folderStyle: {
+      title: {
+        color: TITLE_COLOR,
+        fontSize: TITLE_FONT_SIZE,
+        fontFamily: DEFAULT_FONT_FAMILY,
+      },
+      text: {
+        color: TEXT_COLOR,
+        fontSize: TEXT_FONT_SIZE,
+        fontFamily: DEFAULT_FONT_FAMILY,
+      },
+    },
   };
   state.folders.push(folder);
 
@@ -146,6 +189,13 @@ export const createFolder = function (newFolder) {
   return folder;
 };
 
+export const editFolder = function (folderID, editedFolder) {
+  const folder = state.folders.find((folder) => folder.folderID === folderID);
+  // Make deep copy of edited folder (style)
+  folder.folderStyle = JSON.parse(JSON.stringify(editedFolder));
+  setFoldersLS();
+};
+
 export const createFolderNote = function (newNote, folderID) {
   // Create new note, select current folder, add note to folder, and return it
   const note = createNote(newNote, true);
@@ -165,12 +215,14 @@ export const findFolderNote = function (noteID, folderID) {
 };
 
 const updateNoteIDs = function (folderID) {
+  // Clear folder id of note if the folder was deleted
   const notes = state.notes.filter((note) => note.folderID === folderID);
   notes.forEach((note) => delete note.folderID);
 };
 
 export const deleteFolder = function (folderID) {
   const newFolders = state.folders.filter((note) => note.folderID !== folderID);
+  // Remove deleted folder
   state.folders = newFolders;
   updateNoteIDs(folderID);
   setNotesLS();
@@ -182,9 +234,11 @@ export const removeNote = function (folderID, noteID) {
   const folder = state.folders.findIndex(
     (folder) => folder.folderID === folderID
   );
+  // Remove note from current folder
   const newNotes = state.folders
     .find((folder) => folder.folderID === folderID)
     .notes.filter((note) => note.noteID !== noteID);
+  // Clear folder id of note
   updateNoteIDs(folderID);
   state.folders[folder].notes = newNotes;
   setFoldersLS();
@@ -218,7 +272,6 @@ const changeFolder = function (folder, updatedFolder) {
 
 export const updateItem = function (item, updatedItem) {
   let element;
-
   // Select note in folder
   if (updatedItem.noteID && updatedItem.folderID) {
     element = state.folders
@@ -262,23 +315,18 @@ export const getPaginationResults = function (
   search
 ) {
   state.pagination.page = page;
-
   // Get first and last element of the page
   const start = (page - 1) * state.pagination.resultsPerPage;
   const end = page * state.pagination.resultsPerPage;
-
   // Get url and set pagination.type
   const url = getURL();
   state.pagination.type = url;
-
   // Return search results
   if (search) return state.search.results.slice(start, end);
-
   // Return note results
   if (url === "notes") {
     return state.pagination.notes.slice(start, end);
   }
-
   // Return folder results
   if (url === "folders") {
     return state.pagination.folders.slice(start, end);
@@ -294,7 +342,6 @@ const sortByDefault = function (url, elements) {
 };
 
 const sortByRecent = function (url, elements) {
-  // state.pagination[url] = [...elements].reverse();
   // Get date for current elements (noteDate or folderDate)
   const date = `${url.slice(0, -1) + "Date"}`;
   // Sort by date (recent)
@@ -358,15 +405,16 @@ export const searchItems = function (query) {
   // Setting search results to state
   state.search.results = filteredItems;
   state.pagination[url] = filteredItems;
-  console.log(filteredItems);
   if (!filteredItems.length) return false;
   return true;
 };
 
 export const searchFolders = function (query) {
-  return [...state.folders].filter((folder) =>
-    folder.folderTitle.toLowerCase().includes(query)
-  );
+  if (query)
+    return [...state.folders].filter((folder) =>
+      folder.folderTitle.toLowerCase().includes(query)
+    );
+  if (!query) return [...state.folders];
 };
 
 /* --------------------------------------- */
@@ -380,11 +428,26 @@ export const createAccount = function (account) {
 
 export const checkAuth = function () {
   const account = localStorage.getItem("account");
+  // If account exists then login
   if (account) {
     init();
-    return JSON.parse(account);
+    state.account = JSON.parse(account);
+    return state.account;
   }
   if (!account) return false;
+};
+
+/* ------------------------------------------------ */
+/* ---------------- DELETE ACCOUNT ---------------- */
+/* ------------------------------------------------ */
+
+export const getAccountPassword = function () {
+  return state.account.password;
+};
+
+export const deleteAccount = function () {
+  localStorage.clear();
+  location.reload();
 };
 
 /* ------------------------------------------------ */

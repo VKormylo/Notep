@@ -1,5 +1,4 @@
 @import "_variables.css";
-@import "_components.css";
 
 /* --------------------------------------------- */
 /* ---------------- MAIN HEADER ---------------- */
@@ -48,7 +47,6 @@ svg path {
   grid-area: subheader;
   background-color: var(--secondary-blue-70);
   display: flex;
-  /* justify-content: space-between; */
   align-items: center;
   padding: 0 32px;
   transition: all .3s;

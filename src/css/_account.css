@@ -1,0 +1,144 @@
+@import "_variables.css";
+
+.account-settings {
+  height: 100%;
+}
+
+.account-block {
+  position: relative;
+  height: 100%;
+}
+
+.account-title {
+  color: var(--primary-blue);
+  font-size: var(--title-fz-lg);
+  font-weight: 500;
+}
+
+.account-name {
+  margin: 12px 0 32px 0;
+}
+
+.account-name span {
+  color: var(--primary-blue);
+  font-weight: 500;
+}
+
+.account-subtitle {
+  font-weight: 500;
+  font-size: var(--link-fz);
+  margin-bottom: 16px;
+}
+
+.account-form {
+  position: relative;
+  width: 370px;
+}
+
+.account-form__item {
+  display: flex;
+  align-items: center;
+}
+
+.account-form__item + .account-form__item {
+  margin-top: 12px;
+}
+
+.account-form__input {
+  font-size: var(--btn-fz);
+  background: none;
+  border-bottom: 2px solid var(--primary-blue);
+  padding: 6px;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.account-form__input:focus {
+  border-color: var(--dark-blue);
+}
+
+.account-form__input::placeholder {
+  color: var(--dark-blue);
+}
+
+.account-form__input.wrong-password {
+  border-color: var(--red);
+}
+
+.account-warn {
+  display: none;
+  color: var(--red);
+  font-size: var(--btn-fz);
+  margin-top: 12px;
+}
+
+.account-warn.error {
+  display: block;
+}
+
+.account-del__btn {
+  position: absolute;
+  right: 0;
+  margin-top: 16px;
+  transition: all .3s;
+}
+
+.account-del__btn:hover {
+  background-color: var(--tertiary-blue);
+}
+
+.account-delete {
+  display: none;
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  width: 380px;
+  padding: 24px;
+  background-color: var(--white);
+  border-radius: 10px;
+}
+
+.account-delete.visible {
+  display: block;
+}
+
+.account-delete__title {
+  color: var(--tertiary-blue);
+  font-weight: 500;
+}
+
+.account-delete__text {
+  margin: 12px 0 18px 0;
+}
+
+.account-delete__btns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.account-delete__btn {
+  padding: 8px 55px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all .3s;
+}
+
+.account-delete__cancel {
+  color: var(--primary-blue);
+  background-color: var(--secondary-blue);
+}
+
+.account-delete__cancel:hover {
+  color: var(--dark-blue);
+}
+
+.account-delete__submit {
+  color: var(--white);
+  background-color: var(--primary-blue);
+}
+
+.account-delete__submit:hover {
+  background-color: var(--red);
+}

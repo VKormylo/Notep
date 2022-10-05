@@ -24,6 +24,13 @@
 /* ---------------- BUTTONS ---------------- */
 /* ----------------------------------------- */
 
+.btn--primary {
+  padding: 8px 21px;
+  border-radius: 6px;
+  background-color: var(--primary-blue);
+  color: var(--white);
+}
+
 .btn--create {
   position: relative;
   padding: 9px 18px;
@@ -109,6 +116,257 @@
 .btn--simple.btn--reverse:hover {
   background-color: var(--white);
   color: var(--primary-blue);
+}
+
+/* --------------------------------------------- */
+/* ---------------- EDIT WINDOW ---------------- */
+/* --------------------------------------------- */
+
+.element-edit__btn .element-edit__img,
+.element-edit__btn span {
+  transition: all 0.2s;
+}
+
+.element-edit__btn:hover .element-edit__img {
+  background-color: var(--primary-violet);
+}
+
+.element-edit__btn:hover span {
+  color: var(--primary-violet);
+}
+
+.edit-window {
+  display: none;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  flex-direction: column;
+  width: 370px;
+  height: 80px;
+  background-color: var(--tertiary-blue);
+  border-radius: 4px;
+  overflow: hidden;
+  font-size: var(--btn-fz);
+  box-shadow: 0 0 10px var(--dark-blue);
+}
+
+.edit-window.visible {
+  display: flex;
+}
+
+.edit-header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--secondary-blue);
+}
+
+.edit-types {
+  display: flex;
+  align-items: center;
+  color: var(--white);
+}
+
+.edit-type {
+  padding: 9px;
+  cursor: pointer;
+}
+
+.edit-type.active {
+  background-color: var(--primary-blue);
+}
+
+.edit-btns {
+  display: flex;
+  align-items: center;
+}
+
+.edit-submit__btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  height: 100%;
+  background-color: var(--primary-blue);
+  color: var(--white);
+  transition: all 0.3s;
+}
+
+.edit-submit__btn:hover {
+  background-color: var(--dark-blue);
+}
+
+.edit-close__btn {
+  display: flex;
+  align-items: center;
+  background-color: var(--primary-blue);
+  height: 100%;
+  padding: 0 8px;
+  border-left: 2px solid var(--secondary-blue);
+}
+
+.edit-close__btn:hover svg path {
+  fill: var(--secondary-blue);
+}
+
+.edit-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  padding: 0 12px;
+}
+
+.edit-presets {
+  display: flex;
+  gap: 6px;
+}
+
+/* EDIT COLOR */
+
+.edit-color__circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--secondary-blue);
+  opacity: 0.8;
+}
+
+.edit-color__circle.active {
+  box-shadow: 0px 0px 6px var(--white);
+  opacity: 1;
+}
+
+.edit-color__input {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.edit-color__input.active {
+  box-shadow: 0px 0px 6px var(--white);
+}
+
+.edit-color__input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+.edit-color__input::-webkit-color-swatch {
+  border: solid 2px var(--secondary-blue);
+  border-radius: 50%;
+}
+
+/* EDIT SIZE */
+
+.edit-size__choose {
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  overflow: hidden;
+  height: 25px;
+}
+
+.edit-size__input {
+  width: 82px;
+  padding-left: 6px;
+  background-color: var(--dark-blue);
+  color: var(--white);
+  height: 100%;
+}
+
+.edit-size__input::-webkit-outer-spin-button,
+.edit-size__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.edit-size__input {
+  -moz-appearance: textfield;
+}
+
+.edit-size__input::placeholder {
+  color: var(--secondary-blue);
+}
+
+.edit-size__input.warn {
+  border-bottom: 1px solid var(--red);
+}
+
+.edit-size__submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  background-color: var(--dark-blue);
+  height: 100%;
+  padding: 0 2px;
+  border-left: 1px solid var(--tertiary-blue);
+}
+
+.edit-size__submit svg path {
+  fill: var(--white);
+}
+
+.edit-size__preset {
+  padding: 3px 6px;
+  border-radius: 2px;
+  color: var(--primary-blue);
+  background-color: var(--secondary-blue);
+  cursor: pointer;
+  font-size: var(--date-fz);
+}
+
+.edit-size__preset.active {
+  background-color: var(--primary-blue);
+  color: var(--white);
+}
+
+/* EDIT FAMILY */
+
+.edit-family__preset {
+  padding: 4px 6px;
+  border-radius: 2px;
+  background-color: var(--white);
+  color: var(--primary-blue);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.edit-family__preset.active {
+  background-color: var(--primary-blue);
+  color: var(--white);
+}
+
+.edit-family__preset:nth-child(1) {
+  font-family: "Roboto", sans-serif;
+}
+
+.edit-family__preset:nth-child(2) {
+  font-family: "Rubik", sans-serif;
+}
+
+.edit-family__preset:nth-child(3) {
+  font-family: "Lato", sans-serif;
+}
+
+.edit-family__preset:nth-child(4) {
+  font-family: "Merriweather", serif;
+}
+
+.edit-family__preset:nth-child(5) {
+  font-family: "Courgette", cursive;
 }
 
 /* ------------------------------------------------------- */
@@ -214,6 +472,7 @@
 
 .card-title,
 .card-text {
+  padding-right: 10px;
   -webkit-box-orient: vertical;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -266,6 +525,7 @@
   background-color: var(--white);
   color: var(--primary-blue);
   padding: 6px 8px;
+  margin-right: 24px;
 }
 
 .current-element__title {
@@ -282,7 +542,7 @@
 .current-element__text {
   outline: none;
   width: 800px;
-  min-height: 10px;
+  height: 80%;
   overflow: auto;
 }
 

@@ -1,22 +1,29 @@
-import View from "./View.js";
+import EditView from "./editView.js";
 
-class FolderView extends View {
+class FolderView extends EditView {
+  // Main
   _parentElement = document.querySelector(".folders");
   _container = document.querySelector(".container");
   _pagination = document.querySelector(".pagination");
-
+  // Edit
+  _originalObject;
+  _editedObject;
+  // Add note
   _addWindowBtn;
   _folderNoteWindow;
   _removeBtn;
-
+  // Folder info
   _originalTitle;
   _originalText;
 
   constructor() {
-    super();
+    super(document.querySelector(".folders"));
     // Update subheader on url change
     this._onPageChange();
+    // Hide add note window
     this._addHandlerHideFolderNote();
+    // Toggle edit window
+    this._addHandlerToggleEdit();
   }
 
   /* --------------------------------------------------- */
@@ -29,7 +36,6 @@ class FolderView extends View {
     this._parentElement.addEventListener("click", function (e) {
       const btn = e.target.closest(".btns-add__cancel");
       if (!btn) return;
-      console.log(btn);
       that._addWindowBtn.classList.remove("disabled");
       const folderNote = document.querySelector(".folder-note");
       folderNote.remove();
@@ -47,9 +53,11 @@ class FolderView extends View {
     this._parentElement.addEventListener("click", function (e) {
       const btn = e.target.closest(".folder-add__note");
       if (!btn) return;
+      // Disable button
       that._addWindowBtn = btn;
       that._addWindowBtn.classList.add("disabled");
       const folderNotes = document.querySelector(".folder-notes");
+      // Render folder note
       const markup = that._generateAddNoteWindow();
       folderNotes.insertAdjacentHTML("afterbegin", markup);
       that._folderNoteWindow = document.querySelector(".folder-note");
@@ -61,16 +69,15 @@ class FolderView extends View {
     this._parentElement.addEventListener("click", function (e) {
       const btn = e.target.closest(".btns-add__create");
       if (!btn) return;
-      console.log(btn);
+      // Get title and text
       const title = that._folderNoteWindow.querySelector(
         ".element-create__title"
       );
       const text = that._folderNoteWindow.querySelector(
         ".element-create__text"
       );
-      console.log(title, text);
-      console.log(title.value, text.value);
       const folderID = +document.querySelector(".folder").dataset.id;
+      // Create note object
       const date = new Date();
       const note = {
         noteTitle: title.value,
@@ -153,7 +160,6 @@ class FolderView extends View {
   addHandlerRemoveNote(handler) {
     this._parentElement.addEventListener("click", function (e) {
       const btn = e.target.closest(".note-remove__btn");
-      console.log(btn);
       if (!btn) return;
       const folderID = +document.querySelector(".folder").dataset.id;
       const noteID = +btn.closest(".folder-note").dataset.id;
@@ -182,6 +188,80 @@ class FolderView extends View {
       that._onElementSelect("folder", false);
       // Remove delete window and hide overlay
       that._removeDeleteWindow();
+    });
+  }
+
+  // -------------------- EDIT --------------------
+  _editElementStyle(type, value) {
+    let element;
+    // Set element to the title or text (editing)
+    if (this._editElement === "title")
+      element = document.querySelector(".folder-title");
+    if (this._editElement === "text")
+      element = document.querySelector(".folder-text");
+    // Change element styles (color, size or fontFamily)
+    if (type === "color") element.style.color = value;
+    if (type === "size") element.style.fontSize = value;
+    if (type === "family") element.style.fontFamily = value;
+  }
+
+  _refreshElement() {
+    // Set element to the title or text of the folder
+    const element = document.querySelector(`.folder-${this._editElement}`);
+    // Get variables from original folder object
+    const { color, fontSize, fontFamily } =
+      this._originalObject[this._editElement];
+    // Set element styles to previous styles (cancel changes)
+    element.style.color = color;
+    element.style.fontSize = fontSize;
+    element.style.fontFamily = fontFamily;
+    // Rewrite edited folder object (cancel changes)
+    this._editedObject = JSON.parse(JSON.stringify(this._originalObject));
+    // Cancel disabling
+    this._disableButtons(false);
+  }
+
+  _addHandlerToggleEdit() {
+    const that = this;
+    // Add handler to edit title or text btn
+    this._parentElement.addEventListener("click", function (e) {
+      const btn = e.target.closest(".folder-edit__btn");
+      if (!btn) return;
+      // Set editElement to "title" or "text" (for later using)
+      that._editElement = btn.dataset.element;
+      // Get editWindow element
+      that._editWindow = that._parentElement.querySelector(".edit-window");
+      // Disable other button (if editing title -> disable text btn)
+      that._disableButtons();
+      // Close window and cancel changes (already visible, click again)
+      if (that._editWindow.classList.contains("visible"))
+        that._refreshElement();
+      // Toggle editWindow
+      that._editWindow.classList.toggle("visible");
+      // Render default type (color)
+      that._renderEditType("color");
+      const colorType = Array.from(
+        document.querySelectorAll(".edit-type")
+      ).find((type) => type.dataset.type === "color");
+      // Remove all active classes from other types, add it to color
+      that._rewriteActiveClass("edit-type", colorType);
+    });
+  }
+
+  addHandlerSubmitEdit(handler) {
+    const that = this;
+    // Add handler to submit edit button
+    this._parentElement.addEventListener("click", function (e) {
+      const btn = e.target.closest(".edit-submit__btn");
+      if (!btn) return;
+      const folderID = +document.querySelector(".folder").dataset.id;
+      // Close edit window and activate buttons
+      that._editWindow.classList.remove("visible");
+      that._disableButtons(false);
+      // Rewrite original folder object to the new one
+      that._originalObject = JSON.parse(JSON.stringify(that._editedObject));
+      // Send changed folder object to controller and save it
+      handler(folderID, that._editedObject);
     });
   }
 
@@ -238,6 +318,7 @@ class FolderView extends View {
   }
 
   _generateFolderNotes(note) {
+    // Format date
     const formattedDate = this._getFormattedDate(note.noteDate);
     return `
     <div class="folder-note note-card" data-id="${note.noteID}">
@@ -270,7 +351,13 @@ class FolderView extends View {
 
   // -------------------- FOLDER --------------------
   _generateMarkup() {
+    // Format date
     const formattedDate = this._getFormattedDate(this._data.folderDate);
+    // Set original folder object and edited object to a DEEP copy from state
+    this._originalObject = JSON.parse(JSON.stringify(this._data.folderStyle));
+    this._editedObject = JSON.parse(JSON.stringify(this._data.folderStyle));
+    // Get title and text style objects for easier use
+    const { title: titleStyle, text: textStyle } = this._data.folderStyle;
     this._clear();
     return `
       <div class="folder" data-id="${this._data.folderID}">
@@ -295,6 +382,42 @@ class FolderView extends View {
         <div class="folder-notes__count">
            ${this._data.notes.length} notes
         </div>
+        <div class="element-edit__btns">
+          <a class="element-edit__title element-edit__btn folder-edit__btn" data-element="title">
+            <div class="element-edit__img">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12.4365 3.33774L16.5049 7.42608L6.20657 17.7749L2.14042 13.6866L12.4365 3.33774ZM19.5921 2.35173L17.7777 0.52847C17.0765 -0.176157 15.938 -0.176157 15.2344 0.52847L13.4964 2.27497L17.5648 6.36335L19.5921 4.32615C20.136 3.7796 20.136 2.89824 19.5921 2.35173ZM0.0113215 19.433C-0.0627191 19.7679 0.238132 20.0679 0.571391 19.9865L5.105 18.8819L1.03885 14.7936L0.0113215 19.433Z"
+                  fill="white"
+                />
+              </svg>
+            </div>
+            <span>Title</span>
+          </a>
+          <a class="element-edit__text element-edit__btn folder-edit__btn" data-element="text">
+            <div class="element-edit__img">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12.4365 3.33774L16.5049 7.42608L6.20657 17.7749L2.14042 13.6866L12.4365 3.33774ZM19.5921 2.35173L17.7777 0.52847C17.0765 -0.176157 15.938 -0.176157 15.2344 0.52847L13.4964 2.27497L17.5648 6.36335L19.5921 4.32615C20.136 3.7796 20.136 2.89824 19.5921 2.35173ZM0.0113215 19.433C-0.0627191 19.7679 0.238132 20.0679 0.571391 19.9865L5.105 18.8819L1.03885 14.7936L0.0113215 19.433Z"
+                  fill="white"
+                />
+              </svg>
+            </div>
+            <span>Text</span>
+          </a>
+        </div>
         <a class="folder-add__note btn--square ${
           this._data.notes.length >= 9 ? "disabled" : ""
         }">
@@ -312,14 +435,36 @@ class FolderView extends View {
           </svg>
         </a>
       </div>
-      <div class="folder-title current-element__title" contenteditable>${
-        this._data.folderTitle
-      }</div>
-      <div class="folder-text current-element__text" contenteditable>${
-        this._data.folderText
-      }</div>
+      <div class="folder-title current-element__title" style="
+        color: ${titleStyle.color};
+        font-size: ${titleStyle.fontSize};
+        font-family: ${titleStyle.fontFamily};
+      " contenteditable>${this._data.folderTitle}</div>
+      <div class="folder-text current-element__text" style="
+        color: ${textStyle.color};
+        font-size: ${textStyle.fontSize};
+        font-family: ${textStyle.fontFamily};
+      " contenteditable>${this._data.folderText}</div>
       <div class="folder-notes"></div>
       <a class="folder-delete__btn btn--delete">Delete</a>
+      <div class="edit-window">
+        <div class="edit-header">
+          <div class="edit-types">
+            <div class="edit-type active" data-type="color">Color</div>
+            <div class="edit-type" data-type="size">Size</div>
+            <div class="edit-type" data-type="family">Family</div>
+          </div>
+          <div class="edit-btns">
+            <a class="edit-submit__btn">Submit</a>
+            <a class="edit-close__btn">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+               <path d="M1.4 14L0 12.6L5.6 7L0 1.4L1.4 0L7 5.6L12.6 0L14 1.4L8.4 7L14 12.6L12.6 14L7 8.4L1.4 14Z" fill="#364FC7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="edit-main"></div>
+      </div>
     </div>
       `;
   }

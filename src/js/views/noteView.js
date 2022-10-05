@@ -1,27 +1,33 @@
 import { getURL } from "../helpers.js";
+import EditView from "./editView.js";
 import folderView from "./folderView.js";
-import View from "./View.js";
 
-class NoteView extends View {
+class NoteView extends EditView {
+  // Main
   _parentElement = document.querySelector(".notes");
   _container = document.querySelector(".container");
   _pagination = document.querySelector(".pagination");
   _subheader = document.querySelector(".subheader");
-
+  // Edit
+  _originalObject;
+  _editedObject;
+  // Add to folder
   _addToFolderBlock;
   _folderResults;
+  // Note info
   _originalTitle;
   _originalText;
-
+  // Messages
   _message = "No folders found.";
   _successMessage = "Successfully added";
   _messageBlock;
 
   constructor() {
-    super();
+    super(document.querySelector(".notes"));
     // Update subheader on url change
     this._onPageChange();
-    this._addHandlerShowFolders();
+    // Toggle edit window
+    this._addHandlerToggleEdit();
   }
 
   /* --------------------------------------------------- */
@@ -34,12 +40,14 @@ class NoteView extends View {
     this._folderResults = document.querySelector(".folder-results");
   }
 
-  _addHandlerShowFolders() {
+  addHandlerShowFolders(handler) {
     const that = this;
     this._parentElement.addEventListener("click", function (e) {
       const btn = e.target.closest(".show-folders__btn");
       if (!btn) return;
+      // Show folders
       that._toggleFolderResults();
+      handler();
     });
   }
 
@@ -191,6 +199,82 @@ class NoteView extends View {
     });
   }
 
+  // -------------------- EDIT WINDOW --------------------
+
+  _editElementStyle(type, value) {
+    let element;
+    // Set element to the title or text (editing)
+    if (this._editElement === "title")
+      element = document.querySelector(".note-title");
+    if (this._editElement === "text")
+      element = document.querySelector(".note-text");
+    // Change element styles (color, size or fontFamily)
+    if (type === "color") element.style.color = value;
+    if (type === "size") element.style.fontSize = value;
+    if (type === "family") element.style.fontFamily = value;
+  }
+
+  _refreshElement() {
+    // Set element to the title or text of the note
+    const element = document.querySelector(`.note-${this._editElement}`);
+    // Get variables from original note object
+    const { color, fontSize, fontFamily } =
+      this._originalObject[this._editElement];
+    // Set element styles to previous styles (cancel changes)
+    element.style.color = color;
+    element.style.fontSize = fontSize;
+    element.style.fontFamily = fontFamily;
+    // Rewrite edited note object (cancel changes)
+    this._editedObject = JSON.parse(JSON.stringify(this._originalObject));
+    // Cancel disabling
+    this._disableButtons(false);
+  }
+
+  _addHandlerToggleEdit() {
+    const that = this;
+    // Add handler to edit title or text btn
+    this._parentElement.addEventListener("click", function (e) {
+      const btn = e.target.closest(".note-edit__btn");
+      if (!btn) return;
+      // Set editElement to "title" or "text" (for later using)
+      that._editElement = btn.dataset.element;
+      // Get editWindow element
+      that._editWindow = that._parentElement.querySelector(".edit-window");
+      // Disable other button (if editing title -> disable text btn)
+      that._disableButtons();
+      // Close window and cancel changes (already visible, click again)
+      if (that._editWindow.classList.contains("visible"))
+        that._refreshElement();
+      // Toggle editWindow
+      that._editWindow.classList.toggle("visible");
+      // Render default type (color)
+      that._renderEditType("color");
+      // Get btn with color type
+      const colorType = Array.from(
+        document.querySelectorAll(".edit-type")
+      ).find((type) => type.dataset.type === "color");
+      // Remove all active classes from other types, add it to color
+      that._rewriteActiveClass("edit-type", colorType);
+    });
+  }
+
+  addHandlerSubmitEdit(handler) {
+    const that = this;
+    // Add handler to submit edit button
+    this._parentElement.addEventListener("click", function (e) {
+      const btn = e.target.closest(".edit-submit__btn");
+      if (!btn) return;
+      const noteID = +document.querySelector(".note").dataset.id;
+      // Close edit window and activate buttons
+      that._editWindow.classList.remove("visible");
+      that._disableButtons(false);
+      // Rewrite original note object to the new one
+      that._originalObject = JSON.parse(JSON.stringify(that._editedObject));
+      // Send changed note object to controller and save it
+      handler(noteID, that._editedObject);
+    });
+  }
+
   /* ---------------------------------------------------------- */
   /* ---------------- RENDER AND GENERATE HTML ---------------- */
   /* ---------------------------------------------------------- */
@@ -199,10 +283,13 @@ class NoteView extends View {
   renderFolderResults(folders) {
     const folderResults =
       this._addToFolderBlock.querySelector(".folder-results");
-    if (folders.length) folderResults.classList.add("scroll");
-    if (!folders.length) return folderResults.classList.remove("scroll");
+    if (!folders) return;
+    // Add scroll if there are more than 8 folders, else hide it
+    if (folders.length > 8) folderResults.classList.add("scroll");
+    if (folders.length < 8) folderResults.classList.remove("scroll");
     // Clear old folder results and render new
     folderResults.innerHTML = "";
+    // Generate HTML for each folder
     const folderElements = folders
       .map((folder) => this._generateFolderResults(folder))
       .join("");
@@ -210,9 +297,12 @@ class NoteView extends View {
   }
 
   _generateFolderResults(folder) {
+    // Render folder if it doesn't contain current note
+    // If there is, simply return
     const noteID = +document.querySelector(".note").dataset.id;
     const note = folder.notes.find((note) => note.noteID === noteID);
     if (note) return;
+    // Format date
     const formattedDate = this._getFormattedDate(folder.folderDate);
     return `
     <div class="folder-result" data-id="${folder.folderID}">
@@ -249,7 +339,15 @@ class NoteView extends View {
 
   // -------------------- NOTE --------------------
   _generateMarkup(element) {
+    // Format date
     const formattedDate = this._getFormattedDate(this._data.noteDate);
+    // Cut note title if it's too long
+    const title = element?.length > 20 ? element.slice(1, 20) + "..." : element;
+    // Set original note object and edited object to a DEEP copy from state
+    this._originalObject = JSON.parse(JSON.stringify(this._data.noteStyle));
+    this._editedObject = JSON.parse(JSON.stringify(this._data.noteStyle));
+    // Get title and text style objects for easier use
+    const { title: titleStyle, text: textStyle } = this._data.noteStyle;
     this._clear();
     return `
     <div class="note" data-id="${this._data.noteID}" ${
@@ -269,12 +367,46 @@ class NoteView extends View {
             fill="#536DFE"
           />
         </svg>
-        <a class="link-back">${
-          !element ? "All notes" : "Back to: " + element
-        }</a>
+        <a class="link-back">${!element ? "All notes" : "Back to: " + title}</a>
+      </div>
+      <div class="note-date element-date">${formattedDate}</div>
+      <div class="element-edit__btns">
+        <a class="element-edit__title element-edit__btn note-edit__btn" data-element="title">
+          <div class="element-edit__img">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12.4365 3.33774L16.5049 7.42608L6.20657 17.7749L2.14042 13.6866L12.4365 3.33774ZM19.5921 2.35173L17.7777 0.52847C17.0765 -0.176157 15.938 -0.176157 15.2344 0.52847L13.4964 2.27497L17.5648 6.36335L19.5921 4.32615C20.136 3.7796 20.136 2.89824 19.5921 2.35173ZM0.0113215 19.433C-0.0627191 19.7679 0.238132 20.0679 0.571391 19.9865L5.105 18.8819L1.03885 14.7936L0.0113215 19.433Z"
+                fill="white"
+              />
+            </svg>
+          </div>
+          <span>Title</span>
+        </a>
+        <a class="element-edit__text element-edit__btn note-edit__btn" data-element="text">
+          <div class="element-edit__img">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12.4365 3.33774L16.5049 7.42608L6.20657 17.7749L2.14042 13.6866L12.4365 3.33774ZM19.5921 2.35173L17.7777 0.52847C17.0765 -0.176157 15.938 -0.176157 15.2344 0.52847L13.4964 2.27497L17.5648 6.36335L19.5921 4.32615C20.136 3.7796 20.136 2.89824 19.5921 2.35173ZM0.0113215 19.433C-0.0627191 19.7679 0.238132 20.0679 0.571391 19.9865L5.105 18.8819L1.03885 14.7936L0.0113215 19.433Z"
+                fill="white"
+              />
+            </svg>
+          </div>
+          <span>Text</span>
+        </a>
       </div>
       <div class="note-change current-element__change btn--simple btn--reverse">Change</div>
-      <div class="note-date element-date">${formattedDate}</div>
     </div>
     <div class="add-to-folder">
       <div class="show-folders">
@@ -301,12 +433,34 @@ class NoteView extends View {
       <div class="folder-results"></div>
     </div>
     <a class="note-delete__btn btn--delete">Delete</a>
-    <div class="note-title current-element__title" contenteditable>${
-      this._data.noteTitle
-    }</div>
-    <div class="note-text current-element__text" contenteditable>${
-      this._data.noteText
-    }</div>
+    <div class="note-title current-element__title" style="
+      color: ${titleStyle.color};
+      font-size: ${titleStyle.fontSize};
+      font-family: ${titleStyle.fontFamily};
+    " contenteditable>${this._data.noteTitle}</div>
+    <div class="note-text current-element__text" style="
+      color: ${textStyle.color};
+      font-size: ${textStyle.fontSize};
+      font-family: ${textStyle.fontFamily};
+    " contenteditable>${this._data.noteText}</div>
+    <div class="edit-window">
+      <div class="edit-header">
+        <div class="edit-types">
+          <div class="edit-type active" data-type="color">Color</div>
+          <div class="edit-type" data-type="size">Size</div>
+          <div class="edit-type" data-type="family">Family</div>
+        </div>
+        <div class="edit-btns">
+          <a class="edit-submit__btn">Submit</a>
+          <a class="edit-close__btn">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+             <path d="M1.4 14L0 12.6L5.6 7L0 1.4L1.4 0L7 5.6L12.6 0L14 1.4L8.4 7L14 12.6L12.6 14L7 8.4L1.4 14Z" fill="#364FC7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div class="edit-main"></div>
+      </div>
     </div>
     `;
   }

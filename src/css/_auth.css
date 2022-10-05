@@ -1,3 +1,5 @@
+@import "_variables.css";
+
 .authentication {
   display: none;
   height: 100vh;
@@ -61,7 +63,7 @@
 .auth-form__subtitle {
   font-weight: 500;
   color: var(--tertiary-blue);
-  margin: 18px 0 12px 0;
+  margin: 24px 0 18px 0;
 }
 
 .auth-form form {
@@ -102,7 +104,7 @@
 
 .auth-form__btn {
   position: relative;
-  margin-top: 32px;
+  margin-top: 24px;
   margin-left: auto;
   color: var(--white);
   font-weight: 500;
@@ -129,4 +131,16 @@
 
 .auth-form__btn:hover::before {
   transform: translateX(0);
+}
+
+.auth-form__message {
+  display: none;
+  margin-top: 18px;
+  color: var(--red);
+  font-size: var(--btn-fz);
+  font-weight: 500;
+}
+
+.auth-form__message.warn {
+  display: block;
 }

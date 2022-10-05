@@ -12,6 +12,7 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 import { getURL } from "./helpers.js";
 import authView from "./views/authView.js";
+import settingsView from "./views/settingsView.js";
 
 if (module.hot) {
   module.hot.accept();
@@ -63,6 +64,10 @@ const controlDeleteNote = function (noteID, folderID) {
   if (folderID) controlFolders(folderID);
 };
 
+const controlNoteEdit = function (noteID, editedNote) {
+  model.editNote(noteID, editedNote);
+};
+
 /* ------------------------------------------------- */
 /* ---------------- CONTROL FOLDERS ---------------- */
 /* ------------------------------------------------- */
@@ -98,6 +103,10 @@ const controlDeleteFolder = function (folderID) {
 const controlRemoveNote = function (folderID, noteID) {
   model.removeNote(folderID, noteID);
   controlFolders(folderID);
+};
+
+const controlFolderEdit = function (folderID, editedFolder) {
+  model.editFolder(folderID, editedFolder);
 };
 
 /* ------------------------------------------------ */
@@ -172,9 +181,32 @@ const controlSearch = function (query = "") {
 /* ---------------- CONTROL NAVBAR ---------------- */
 /* ------------------------------------------------ */
 
-const controlNavbar = function () {
-  controlPagination(1);
-  controlSorting();
+const controlNavbar = function (url) {
+  if (url !== "account") {
+    controlPagination(1);
+    controlSorting();
+  }
+  if (url === "account") {
+    settingsView.render(model.state.account);
+  }
+};
+
+/* -------------------------------------------------- */
+/* ---------------- CONTROL SETTINGS ---------------- */
+/* -------------------------------------------------- */
+
+// -------------------- DELETE ACCOUNT --------------------
+const controlDeleteAccountValidation = function (password, confirmPassword) {
+  const accountPassword = model.getAccountPassword();
+  if (password !== accountPassword || confirmPassword !== accountPassword) {
+    settingsView.validatePassword(true);
+    return;
+  }
+  settingsView.validatePassword(false);
+};
+
+const controlDeleteAccount = function () {
+  model.deleteAccount();
 };
 
 /* -------------------------------------------------------------------- */
@@ -192,9 +224,11 @@ const init = function () {
   noteView.addHandlerOnChange();
   noteView.addHandlerChangeNote(controlItemChange);
   noteView.addHandlerAddToFolder(controlNoteAddToFolder);
+  noteView.addHandlerShowFolders(controlNoteSearchFolders);
   noteView.addHandlerSearchFolders(controlNoteSearchFolders);
   noteView.addHandlerGoBack(controlPagination);
   noteView.addHandlerDeleteNote(controlDeleteNote);
+  noteView.addHandlerSubmitEdit(controlNoteEdit);
 
   // -------------------- FOLDER VIEW --------------------
   folderView.addHandlerSelectFolder(controlFolders);
@@ -206,6 +240,7 @@ const init = function () {
   folderView.addHandlerGoBackToFolder(controlFolders);
   folderView.addHandlerDeleteFolder(controlDeleteFolder);
   folderView.addHandlerRemoveNote(controlRemoveNote);
+  folderView.addHandlerSubmitEdit(controlFolderEdit);
 
   // -------------------- PAGINATION VIEW --------------------
   paginationView.addHandlerClick(controlPagination);
@@ -221,13 +256,17 @@ const init = function () {
   // -------------------- NAVBAR VIEW --------------------
   navbarView.setUrl(controlNavbar);
   navbarView.addHandlerChangeUrl(controlNavbar);
+  navbarView.addHandlerOpenSettings(controlNavbar);
+
+  // -------------------- SETTINS VIEW --------------------
+  settingsView.addHandlerSubmitPassword(controlDeleteAccountValidation);
+  settingsView.addHandlerSubmitDelete(controlDeleteAccount);
 };
 
 const loggedIn = function () {
   // -------------------- AUTH VIEW --------------------
   authView.addHandlerCreateAccount(controlAuth);
   const logged = model.checkAuth();
-  console.log(logged);
   if (!logged) authView.showSignUpWindow();
   if (logged) login(logged.username);
 };

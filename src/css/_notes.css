@@ -9,7 +9,7 @@
   top: 12px;
   right: 12px;
   opacity: 0;
-  transition: all .2s;
+  transition: all 0.2s;
 }
 
 .note-card:hover .note-card__edit {
@@ -133,6 +133,10 @@
 .folder-result__title {
   font-size: var(--title-fz);
   color: var(--white);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  max-width: 120px;
 }
 
 .folder-result__date {
@@ -194,4 +198,48 @@
 
 .note-remove__btn:hover svg:first-child {
   fill: var(--dark-blue);
+}
+
+.element-edit__btns {
+  display: flex;
+  gap: 12px;
+}
+
+.element-edit__btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.element-edit__btn.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.element-edit__img {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.element-edit__title .element-edit__img {
+  background-color: var(--primary-blue);
+}
+
+.element-edit__text .element-edit__img {
+  background-color: var(--dark-blue);
+}
+
+.element-edit__img svg {
+  height: 14px;
+  width: 14px;
+}
+
+.element-edit__title span {
+  color: var(--primary-blue);
+}
+
+.element-edit__text span {
+  color: var(--dark-blue);
 }

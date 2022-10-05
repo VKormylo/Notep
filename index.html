@@ -7,9 +7,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Courgette&family=Roboto:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Courgette&family=Lato&family=Merriweather&family=Roboto:wght@400;500;700&family=Rubik&display=swap"
       rel="stylesheet"
     />
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png" />
+    <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#5bbad5" />
+    <meta name="msapplication-TileColor" content="#ff0000" />
+    <meta name="theme-color" content="#ffffff" />
     <link rel="stylesheet" href="src/css/style.css" />
     <script type="module" src="src/js/controller.js"></script>
     <title>Notep</title>
@@ -113,6 +119,9 @@
                 placeholder="Create a password"
                 required
               />
+            </div>
+            <div class="auth-form__message">
+              Password should be at least 8 characters
             </div>
             <a class="auth-form__btn">Sign Up</a>
           </form>
@@ -289,20 +298,10 @@
 
       <div class="main">
         <div class="overlay hidden"></div>
-        <!-- <div class="deleting-window">
-          <div class="deleting-name">Deleting note</div>
-          <div class="deleting-title">You want to delete the note, are you sure?</div>
-          <div class="deleting-subtitle">All data of the note will be deleted.</div>
-          <div class="deleting-btns">
-            <a class="deleting-cancel">No</a>
-            <a class="deleting-confirm btn--delete">Yes</a>
-          </div>
-        </div> -->
         <div class="notes all"></div>
         <div class="folders all"></div>
+        <div class="settings"></div>
         <div class="pagination"></div>
-        <!-- <div class="messages"></div> -->
-        <!-- <div class="welcome">Welcome to the website! Let's add new notes.</div> -->
       </div>
     </div>
   </body>

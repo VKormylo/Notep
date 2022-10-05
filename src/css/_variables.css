@@ -9,6 +9,7 @@
   --tertiary-blue: #364fc7;
   --dark-blue: #172255;
   --primary-violet: #9e3dff;
+  --ocean: #00C2FF;
   --red: #FF005C;
   --white: #fff;
 
@@ -16,13 +17,18 @@
   --primary-blue-90: rgb(83, 109, 254, 0.9);
   --primary-blue-40: rgb(83, 109, 254, 0.4);
   --primary-blue-20: rgb(83, 109, 254, 0.2);
-  --secondary-blue-70: rgb(241, 243, 255, 0.3);
+
+  --secondary-blue-70: rgb(241, 243, 255, 0.7);
+
   --tertiary-blue-50: rgb(83, 109, 254, 0.5);
+
   --ocean-30: rgb(0, 194, 255, 0.3);
+
   --primary-violet-60: rgb(158, 61, 255, 0.6);
   --primary-violet-40: rgb(158, 61, 255, 0.4);
   --primary-violet-30: rgb(158, 61, 255, 0.3);
   --primary-violet-20: rgb(158, 61, 255, 0.2);
+  
   --white-70: rgb(255, 255, 255, 0.7);
   --white-60: rgb(255, 255, 255, 0.6);
   --white-30: rgb(255, 255, 255, 0.3);

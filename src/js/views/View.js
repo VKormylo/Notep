@@ -99,6 +99,7 @@ export default class View {
         that._container.classList.contains("subheader-hidden") ||
         that._parentElement.classList.contains("current")
       ) {
+        if (location.hash === "#account") return;
         that._container.classList.remove("subheader-hidden");
         that._parentElement.className = "notes all";
       }
